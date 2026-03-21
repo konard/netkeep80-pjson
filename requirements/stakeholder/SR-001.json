@@ -1,0 +1,22 @@
+{
+  "id": "SR-001",
+  "type": "stakeholder",
+  "title": "API-поверхность в стиле nlohmann::json",
+  "description": "Разработчики, использующие pjson, должны встретить знакомую API-поверхность, вдохновлённую nlohmann::json, включая доступ к значениям по пути, итерацию по массивам и объектам, проверку типов и удобное создание JSON-структур.",
+  "rationale": "nlohmann::json — это де-факто стандартная C++ JSON-библиотека. Знакомство снижает порог входа и барьеры к принятию.",
+  "status": "approved",
+  "priority": "high",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001"],
+  "traces_to": ["FR-002", "FR-003", "FR-004"],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "API поддерживает типы JSON-значений: null, boolean, integer, float, string, array, object",
+    "Доступ к значениям по ключу (объекты) и по индексу (массивы)",
+    "Range-based for циклы работают для массивов и объектов"
+  ],
+  "tags": ["api", "usability"]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "SR-002",
+  "type": "stakeholder",
+  "title": "pjson как тонкая обёртка вокруг pmm",
+  "description": "pjson должна быть специфической JSON-обёрткой вокруг pmm, делегируя всё управление памятью, персистентность и низкоуровневые операции со структурами данных pmm. pjson не должна переимплементировать функциональность, уже предоставляемую pmm.",
+  "rationale": "Избежание дублирования между pjson и pmm обеспечивает поддерживаемость кодовой базы и гарантирует, что улучшения pmm автоматически приносят пользу pjson.",
+  "status": "approved",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001", "BR-002"],
+  "traces_to": ["FR-001"],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "pjson использует pptr, pmap, pvector/parray, pstring, pstringview pmm напрямую",
+    "Код управления памятью не дублируется в pjson",
+    "pjson компилируется как header-only библиотека, зависящая только от pmm"
+  ],
+  "tags": ["architecture", "pmm", "wrapper"]
+}

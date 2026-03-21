@@ -1,0 +1,23 @@
+{
+  "id": "NFR-001",
+  "type": "nonfunctional",
+  "title": "Header-only библиотека на C++20",
+  "description": "pjson должна быть header-only библиотекой на C++20, в соответствии с дизайном pmm. Не должны требоваться скомпилированные библиотечные артефакты. Пользователи подключают заголовки pjson и компилируют напрямую.",
+  "rationale": "Header-only дизайн упрощает интеграцию, устраняет проблемы совместимости ABI и следует установленному паттерну pmm.",
+  "status": "approved",
+  "priority": "high",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "Весь код pjson находится в заголовочных файлах",
+    "Для библиотеки не требуются .cpp файлы исходного кода",
+    "Компилируется по стандарту C++20",
+    "Генерируется single-header вариант"
+  ],
+  "tags": ["build", "c++20", "header-only"]
+}

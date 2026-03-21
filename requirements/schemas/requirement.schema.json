@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/netkeep80/pjson/requirements/schemas/requirement.schema.json",
+  "title": "Требование",
+  "description": "Схема для отдельного требования проекта pjson. Поддерживает трассировку между типами требований (по методологии Карла Вигерса) и трассировку к файлам реализации и тестов.",
+  "type": "object",
+  "required": ["id", "type", "title", "description", "status", "priority"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$",
+      "description": "Уникальный идентификатор требования. Префикс указывает тип: BR=Бизнес, SR=Заинтересованные стороны, FR=Функциональные, NFR=Нефункциональные, CR=Ограничения, IR=Интерфейсные."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["business", "stakeholder", "functional", "nonfunctional", "constraint", "interface"],
+      "description": "Категория типа требования."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Краткий заголовок требования."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Подробное описание требования."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Обоснование данного требования."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "proposed", "approved", "implemented", "verified", "deferred", "rejected"],
+      "description": "Текущий статус жизненного цикла требования."
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Уровень приоритета требования."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Версия требования (например, '1.0').",
+      "default": "1.0"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "Дата создания требования (ГГГГ-ММ-ДД)."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Дата последнего обновления требования (ГГГГ-ММ-ДД)."
+    },
+    "author": {
+      "type": "string",
+      "description": "Автор данного требования."
+    },
+    "traces_from": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$"
+      },
+      "uniqueItems": true,
+      "description": "ID требований более высокого уровня, из которых получено данное требование (трассировка вверх)."
+    },
+    "traces_to": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$"
+      },
+      "uniqueItems": true,
+      "description": "ID требований более низкого уровня, полученных из данного требования (трассировка вниз)."
+    },
+    "implementation_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Относительные пути к файлам исходного кода, реализующим данное требование."
+    },
+    "test_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Относительные пути к файлам тестов, проверяющим данное требование."
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Измеримые условия, которые должны быть выполнены для признания требования реализованным."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "description": "Теги для категоризации и фильтрации."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Дополнительные примечания или комментарии."
+    }
+  },
+  "additionalProperties": false
+}

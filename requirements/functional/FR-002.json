@@ -1,0 +1,23 @@
+{
+  "id": "FR-002",
+  "type": "functional",
+  "title": "Система типов JSON-значений",
+  "description": "pjson должна поддерживать стандартные типы JSON-значений: null, boolean, integer (int64), unsigned integer (uint64), floating-point (double), string, array и object. Дополнительно должны поддерживаться типы бинарных данных и ссылок ($ref) из прототипа как расширения.",
+  "rationale": "Полное покрытие типов JSON необходимо для JSON-библиотеки общего назначения. Расширения (binary, $ref) обеспечивают возможности персистентных перекрёстных ссылок и работы с бинарными данными.",
+  "status": "proposed",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["SR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "Все стандартные типы JSON могут быть представлены",
+    "Тип расширения binary поддерживается через кодирование $base64",
+    "Тип ссылок поддерживается через JSON-указатели $ref",
+    "Предоставляются методы проверки типов и безопасного преобразования"
+  ],
+  "tags": ["core", "types"]
+}
