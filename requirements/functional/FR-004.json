@@ -1,0 +1,23 @@
+{
+  "id": "FR-004",
+  "type": "functional",
+  "title": "JSON parsing and serialization",
+  "description": "pjson must parse standard JSON text into persistent JSON structures and serialize persistent JSON structures back to standard JSON text. Extensions ($ref, $base64) must be handled during parsing and serialization.",
+  "rationale": "Interoperability with the JSON ecosystem requires standard parsing and serialization capabilities.",
+  "status": "proposed",
+  "priority": "high",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["SR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "Valid JSON text can be parsed into persistent structures",
+    "Persistent structures can be serialized to valid JSON text",
+    "Round-trip (parse -> serialize -> parse) preserves data",
+    "$ref and $base64 extensions are handled correctly"
+  ],
+  "tags": ["codec", "parsing", "serialization"]
+}

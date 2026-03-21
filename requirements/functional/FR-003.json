@@ -1,0 +1,23 @@
+{
+  "id": "FR-003",
+  "type": "functional",
+  "title": "Path-based JSON value access",
+  "description": "pjson must support path-based addressing for reading, writing, and deleting JSON values. Paths follow a slash-separated format (e.g., '/a/b/0/c') where numeric segments address array elements and string segments address object keys.",
+  "rationale": "Path-based access is essential for database-like operations on hierarchical JSON structures.",
+  "status": "proposed",
+  "priority": "high",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["SR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "get(path) retrieves a value at the specified path",
+    "put(path, value) creates or updates a value at the specified path",
+    "erase(path) removes a value at the specified path",
+    "Intermediate containers are auto-created on put"
+  ],
+  "tags": ["api", "path-access"]
+}

@@ -1,0 +1,26 @@
+name: Requirements Validation
+
+on:
+  push:
+    paths:
+      - 'requirements/**'
+      - 'scripts/validate-requirements.js'
+  pull_request:
+    paths:
+      - 'requirements/**'
+      - 'scripts/validate-requirements.js'
+
+jobs:
+  validate:
+    name: Validate Requirements
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate requirements
+        run: node scripts/validate-requirements.js

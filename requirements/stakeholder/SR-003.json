@@ -1,0 +1,23 @@
+{
+  "id": "SR-003",
+  "type": "stakeholder",
+  "title": "Requirements-driven development process",
+  "description": "The project must follow a requirements-driven development methodology. Requirements are stored as JSON files following a defined JSON Schema, organized by type (business, stakeholder, functional, non-functional, constraint, interface). Traceability must be maintained between requirements, implementation files, and test files.",
+  "rationale": "Requirements-driven development (per Karl Wiegers) ensures that all implemented features are justified by traceable requirements, and that all requirements are verified by tests.",
+  "status": "approved",
+  "priority": "high",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001"],
+  "traces_to": ["FR-005", "FR-006"],
+  "implementation_files": ["requirements/schemas/requirement.schema.json"],
+  "test_files": [],
+  "acceptance_criteria": [
+    "All requirements are stored in JSON files conforming to the requirement schema",
+    "Each requirement has upward and downward traceability links",
+    "CI pipeline validates requirement files against the JSON schema",
+    "Source code comments reference requirement IDs"
+  ],
+  "tags": ["process", "requirements", "traceability"]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "FR-002",
+  "type": "functional",
+  "title": "JSON value type system",
+  "description": "pjson must support the standard JSON value types: null, boolean, integer (int64), unsigned integer (uint64), floating-point (double), string, array, and object. Additionally, binary data and reference ($ref) types from the prototype should be supported as extensions.",
+  "rationale": "Complete JSON type coverage is necessary for a general-purpose JSON library. Extensions (binary, $ref) provide persistent cross-reference and binary data capabilities.",
+  "status": "proposed",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["SR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "All standard JSON types are representable",
+    "Binary extension type is supported via $base64 encoding",
+    "Reference type is supported via $ref JSON pointers",
+    "Type checking and safe conversion methods are provided"
+  ],
+  "tags": ["core", "types"]
+}

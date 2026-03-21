@@ -1,0 +1,23 @@
+{
+  "id": "NFR-001",
+  "type": "nonfunctional",
+  "title": "Header-only C++20 library",
+  "description": "pjson must be a header-only C++20 library, consistent with pmm's design. No compiled library artifacts should be required. Users include pjson headers and compile directly.",
+  "rationale": "Header-only design simplifies integration, eliminates ABI compatibility concerns, and follows pmm's established pattern.",
+  "status": "approved",
+  "priority": "high",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "All pjson code is in header files",
+    "No .cpp source files are required for the library",
+    "Compiles with C++20 standard",
+    "Single-header variant is generated"
+  ],
+  "tags": ["build", "c++20", "header-only"]
+}

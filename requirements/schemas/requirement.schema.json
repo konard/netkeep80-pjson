@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/netkeep80/pjson/requirements/schemas/requirement.schema.json",
+  "title": "Requirement",
+  "description": "Schema for a single requirement in the pjson project. Supports traceability between requirement types (per Karl Wiegers' methodology) and traceability to implementation and test files.",
+  "type": "object",
+  "required": ["id", "type", "title", "description", "status", "priority"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$",
+      "description": "Unique requirement identifier. Prefix indicates type: BR=Business, SR=Stakeholder, FR=Functional, NFR=Non-Functional, CR=Constraint, IR=Interface."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["business", "stakeholder", "functional", "nonfunctional", "constraint", "interface"],
+      "description": "Requirement type category."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Short requirement title."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Detailed requirement description."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Justification for this requirement."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "proposed", "approved", "implemented", "verified", "deferred", "rejected"],
+      "description": "Current lifecycle status of the requirement."
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Requirement priority level."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Requirement version (e.g., '1.0').",
+      "default": "1.0"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the requirement was created (YYYY-MM-DD)."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the requirement was last updated (YYYY-MM-DD)."
+    },
+    "author": {
+      "type": "string",
+      "description": "Author of this requirement."
+    },
+    "traces_from": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$"
+      },
+      "uniqueItems": true,
+      "description": "IDs of higher-level requirements this requirement is derived from (upward traceability)."
+    },
+    "traces_to": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$"
+      },
+      "uniqueItems": true,
+      "description": "IDs of lower-level requirements derived from this requirement (downward traceability)."
+    },
+    "implementation_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Relative paths to source files implementing this requirement."
+    },
+    "test_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Relative paths to test files verifying this requirement."
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Measurable conditions that must be met for the requirement to be considered fulfilled."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "description": "Tags for categorization and filtering."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or comments."
+    }
+  },
+  "additionalProperties": false
+}

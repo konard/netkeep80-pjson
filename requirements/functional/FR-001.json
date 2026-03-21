@@ -1,0 +1,24 @@
+{
+  "id": "FR-001",
+  "type": "functional",
+  "title": "JSON node storage via pmm AVL-tree forest",
+  "description": "JSON nodes must be allocated, stored, and managed exclusively through pmm's AVL-tree forest mechanism. Each JSON value (null, boolean, integer, real, string, array, object) is represented as a pmm-managed block. Arrays use parray for O(1) index access. Objects use pmap for O(log n) key lookup. Strings use pstringview (interned, read-only) for keys and pstring (mutable) for values.",
+  "rationale": "This eliminates the separate pool allocator used in the BinDiffSynchronizer prototype and aligns with BR-002's unified architecture requirement.",
+  "status": "proposed",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-002", "SR-002"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "JSON nodes use pmm allocation (no ppool or custom pool)",
+    "Arrays backed by parray with O(1) index access",
+    "Objects backed by pmap with O(log n) key lookup",
+    "String keys use pstringview for interning and deduplication",
+    "String values use pstring for mutability"
+  ],
+  "tags": ["core", "pmm", "avl-tree", "node"]
+}

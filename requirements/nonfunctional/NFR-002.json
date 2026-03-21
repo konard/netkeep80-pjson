@@ -1,0 +1,21 @@
+{
+  "id": "NFR-002",
+  "type": "nonfunctional",
+  "title": "POD-only persistent types",
+  "description": "All types stored in persistent memory must be trivially copyable (POD). This ensures the entire memory image can be saved and loaded as raw bytes without serialization logic.",
+  "rationale": "Trivially copyable types allow the pmm memory image to be persisted and restored via raw byte I/O, which is the fundamental persistence mechanism.",
+  "status": "approved",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001"],
+  "traces_to": [],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "static_assert(std::is_trivially_copyable_v<T>) for all persistent types",
+    "No virtual functions, non-trivial constructors, or pointer members in persistent types"
+  ],
+  "tags": ["persistence", "pod", "constraint"]
+}

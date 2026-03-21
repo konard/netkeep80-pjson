@@ -1,0 +1,22 @@
+{
+  "id": "BR-002",
+  "type": "business",
+  "title": "Unified AVL-tree forest architecture",
+  "description": "pjson must use the same AVL-tree forest architectural paradigm as pmm for both memory management and stored object management. This eliminates functional and architectural duplication (e.g., the separate pool mechanism in the prototype).",
+  "rationale": "Using a single architectural paradigm (AVL-tree forest) for both the memory manager and the stored objects reduces complexity, code duplication, and maintenance burden. The prototype's separate pool allocator introduces redundant functionality that pmm already provides.",
+  "status": "approved",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": [],
+  "traces_to": ["SR-002", "FR-001", "CR-001"],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "No separate pool allocator is used for JSON node management",
+    "JSON nodes are managed through pmm's AVL-tree-based allocation",
+    "Memory management and object storage share the same paradigm"
+  ],
+  "tags": ["architecture", "avl-tree", "pmm"]
+}

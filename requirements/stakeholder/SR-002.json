@@ -1,0 +1,22 @@
+{
+  "id": "SR-002",
+  "type": "stakeholder",
+  "title": "pjson as a thin wrapper around pmm",
+  "description": "pjson must be a specific JSON wrapper around pmm, delegating all memory management, persistence, and low-level data structure operations to pmm. pjson should not re-implement functionality already provided by pmm.",
+  "rationale": "Avoiding duplication between pjson and pmm keeps the codebase maintainable and ensures that improvements to pmm automatically benefit pjson.",
+  "status": "approved",
+  "priority": "critical",
+  "version": "1.0",
+  "created": "2026-03-21",
+  "author": "netkeep80",
+  "traces_from": ["BR-001", "BR-002"],
+  "traces_to": ["FR-001"],
+  "implementation_files": [],
+  "test_files": [],
+  "acceptance_criteria": [
+    "pjson uses pmm's pptr, pmap, pvector/parray, pstring, pstringview directly",
+    "No memory management code is duplicated in pjson",
+    "pjson compiles as a header-only library depending only on pmm"
+  ],
+  "tags": ["architecture", "pmm", "wrapper"]
+}
