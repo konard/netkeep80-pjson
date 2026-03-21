@@ -1,9 +1,9 @@
 {
   "id": "FR-006",
   "type": "functional",
-  "title": "Requirements traceability validation in CI",
-  "description": "The CI pipeline must validate traceability links between requirements: all referenced IDs in traces_from and traces_to must exist, and bidirectional links must be consistent (if A traces_to B, then B should traces_from A). Implementation and test file paths should be checked for existence.",
-  "rationale": "Traceability validation ensures the requirement network remains connected and consistent, preventing orphaned or dangling references.",
+  "title": "Валидация трассировки требований в CI",
+  "description": "CI-пайплайн должен валидировать ссылки трассировки между требованиями: все указанные ID в traces_from и traces_to должны существовать, а двунаправленные ссылки должны быть согласованы (если A traces_to B, то B должен traces_from A). Пути к файлам реализации и тестов должны проверяться на существование.",
+  "rationale": "Валидация трассировки гарантирует, что сеть требований остаётся связной и согласованной, предотвращая осиротевшие или висячие ссылки.",
   "status": "approved",
   "priority": "medium",
   "version": "1.0",
@@ -14,10 +14,10 @@
   "implementation_files": ["scripts/validate-requirements.js"],
   "test_files": [],
   "acceptance_criteria": [
-    "All requirement ID references are validated for existence",
-    "Bidirectional traceability consistency is checked",
-    "Warnings are produced for requirements without implementation or test files",
-    "Pipeline fails on broken traceability links"
+    "Все ссылки на ID требований проверяются на существование",
+    "Проверяется согласованность двунаправленной трассировки",
+    "Выдаются предупреждения для требований без файлов реализации или тестов",
+    "Пайплайн завершается с ошибкой при нарушенных ссылках трассировки"
   ],
   "tags": ["ci", "validation", "traceability"]
 }

@@ -1,9 +1,9 @@
 {
   "id": "FR-005",
   "type": "functional",
-  "title": "Requirements JSON schema validation in CI",
-  "description": "The CI pipeline must validate all requirement JSON files against the requirement JSON schema. Invalid files must cause the pipeline to fail with a clear error message indicating which file and which validation rule was violated.",
-  "rationale": "Automated validation ensures requirement files remain consistent and complete throughout the project lifecycle.",
+  "title": "Валидация JSON-схемы требований в CI",
+  "description": "CI-пайплайн должен валидировать все JSON-файлы требований по JSON-схеме требований. Невалидные файлы должны приводить к сбою пайплайна с понятным сообщением об ошибке, указывающим какой файл и какое правило валидации нарушено.",
+  "rationale": "Автоматическая валидация гарантирует, что файлы требований остаются согласованными и полными на протяжении всего жизненного цикла проекта.",
   "status": "approved",
   "priority": "high",
   "version": "1.0",
@@ -14,9 +14,9 @@
   "implementation_files": ["scripts/validate-requirements.js", ".github/workflows/requirements.yml"],
   "test_files": [],
   "acceptance_criteria": [
-    "CI job validates all .json files under requirements/ against the schema",
-    "Validation errors are reported with file name and error details",
-    "Pipeline fails if any requirement file is invalid"
+    "CI-задача валидирует все .json файлы в каталоге requirements/ по схеме",
+    "Ошибки валидации сообщаются с именем файла и деталями ошибки",
+    "Пайплайн завершается с ошибкой, если какой-либо файл требования невалиден"
   ],
   "tags": ["ci", "validation", "schema"]
 }

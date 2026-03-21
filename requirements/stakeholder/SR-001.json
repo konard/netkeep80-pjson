@@ -1,9 +1,9 @@
 {
   "id": "SR-001",
   "type": "stakeholder",
-  "title": "nlohmann::json-like API surface",
-  "description": "Developers using pjson should encounter a familiar API surface inspired by nlohmann::json, including value access by path, iteration over arrays and objects, type checking, and convenient construction of JSON structures.",
-  "rationale": "nlohmann::json is the de facto standard C++ JSON library. Familiarity reduces learning curve and adoption friction.",
+  "title": "API-поверхность в стиле nlohmann::json",
+  "description": "Разработчики, использующие pjson, должны встретить знакомую API-поверхность, вдохновлённую nlohmann::json, включая доступ к значениям по пути, итерацию по массивам и объектам, проверку типов и удобное создание JSON-структур.",
+  "rationale": "nlohmann::json — это де-факто стандартная C++ JSON-библиотека. Знакомство снижает порог входа и барьеры к принятию.",
   "status": "approved",
   "priority": "high",
   "version": "1.0",
@@ -14,9 +14,9 @@
   "implementation_files": [],
   "test_files": [],
   "acceptance_criteria": [
-    "API supports JSON value types: null, boolean, integer, float, string, array, object",
-    "Values can be accessed by key (objects) and index (arrays)",
-    "Range-based for loops work for arrays and objects"
+    "API поддерживает типы JSON-значений: null, boolean, integer, float, string, array, object",
+    "Доступ к значениям по ключу (объекты) и по индексу (массивы)",
+    "Range-based for циклы работают для массивов и объектов"
   ],
   "tags": ["api", "usability"]
 }

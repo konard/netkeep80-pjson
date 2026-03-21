@@ -1,89 +1,89 @@
-# pjson — Persistent JSON
+# pjson — Персистентный JSON
 
-A C++20 header-only library providing a JSON-like API for data structures stored in a persistent address space managed by [PersistMemoryManager (pmm)](https://github.com/netkeep80/PersistMemoryManager).
+C++20 header-only библиотека, предоставляющая JSON-подобный API для структур данных, хранящихся в персистентном адресном пространстве, управляемом [PersistMemoryManager (pmm)](https://github.com/netkeep80/PersistMemoryManager).
 
-## What is pjson?
+## Что такое pjson?
 
-pjson is an analogue of [nlohmann::json](https://github.com/nlohmann/json) for persistent memory. Instead of working with in-memory objects that need explicit serialization, pjson operates directly on a persistent memory image — all data survives process restarts without conversion.
+pjson — это аналог [nlohmann::json](https://github.com/nlohmann/json) для персистентной памяти. Вместо работы с объектами в оперативной памяти, требующими явной сериализации, pjson работает непосредственно с образом персистентной памяти — все данные сохраняются между перезапусками процесса без преобразования.
 
-Key characteristics:
-- **Persistent by design** — JSON data lives in a memory-mapped file or persistent heap; no serialization/deserialization overhead
-- **Familiar API** — inspired by nlohmann::json with path-based access, iteration, and type safety
-- **Unified architecture** — uses pmm's AVL-tree forest paradigm for both memory management and stored objects
-- **Header-only** — include and compile, no separate library build needed
-- **C++20** — leverages concepts, ranges, and modern C++ features
+Ключевые характеристики:
+- **Персистентность по замыслу** — JSON-данные хранятся в файле с отображением в память или в персистентной куче; нет накладных расходов на сериализацию/десериализацию
+- **Привычный API** — вдохновлён nlohmann::json с доступом по пути, итерацией и типобезопасностью
+- **Единая архитектура** — использует парадигму леса AVL-деревьев pmm как для управления памятью, так и для хранимых объектов
+- **Header-only** — подключите и компилируйте, отдельная сборка библиотеки не нужна
+- **C++20** — использует concepts, ranges и современные возможности C++
 
-## Architecture
+## Архитектура
 
-pjson is a thin JSON wrapper around pmm. All memory management, persistent pointers, and data structures are provided by pmm:
+pjson — это тонкая JSON-обёртка вокруг pmm. Всё управление памятью, персистентные указатели и структуры данных предоставляются pmm:
 
-| JSON Type | pmm Container | Access     |
-|-----------|---------------|------------|
-| object    | `pmap`        | O(log n)   |
-| array     | `parray`      | O(1)       |
-| string    | `pstring`     | O(1)       |
-| string key| `pstringview` | O(1) cmp   |
-| number    | inline        | O(1)       |
-| boolean   | inline        | O(1)       |
-| null      | (tag only)    | O(1)       |
+| Тип JSON   | Контейнер pmm | Доступ     |
+|------------|---------------|------------|
+| object     | `pmap`        | O(log n)   |
+| array      | `parray`      | O(1)       |
+| string     | `pstring`     | O(1)       |
+| string key | `pstringview` | O(1) cmp   |
+| number     | inline        | O(1)       |
+| boolean    | inline        | O(1)       |
+| null       | (только тег)  | O(1)       |
 
-See [docs/architecture.md](docs/architecture.md) for the full architecture description and [docs/development-plan.md](docs/development-plan.md) for the development roadmap.
+См. [docs/architecture.md](docs/architecture.md) для полного описания архитектуры и [docs/development-plan.md](docs/development-plan.md) для дорожной карты разработки.
 
-## Project Status
+## Статус проекта
 
-**Phase 1: Infrastructure** — Requirements framework, documentation, and CI pipeline are established.
+**Фаза 1: Инфраструктура** — Фреймворк требований, документация и CI-пайплайн созданы.
 
-The pjson prototype is currently developed in [BinDiffSynchronizer](https://github.com/netkeep80/BinDiffSynchronizer). Migration to this repository (Phase 2) will replace the prototype's pool allocator and sorted-array map with pmm's native AVL-tree-based containers.
+Прототип pjson в настоящее время разрабатывается в [BinDiffSynchronizer](https://github.com/netkeep80/BinDiffSynchronizer). Миграция в этот репозиторий (Фаза 2) заменит пул-аллокатор прототипа и сортированный массив-карту на нативные контейнеры pmm на основе AVL-деревьев.
 
-## Requirements-Driven Development
+## Разработка на основе требований
 
-This project follows a requirements-driven methodology (per Karl Wiegers). All requirements are stored as JSON files with full traceability:
+Проект следует методологии разработки на основе требований (по Карлу Вигерсу). Все требования хранятся в виде JSON-файлов с полной трассировкой:
 
 ```
 requirements/
-├── schemas/          # JSON Schema for requirement validation
-├── business/         # Business requirements (BR-xxx)
-├── stakeholder/      # Stakeholder requirements (SR-xxx)
-├── functional/       # Functional requirements (FR-xxx)
-├── nonfunctional/    # Non-functional requirements (NFR-xxx)
-├── constraints/      # Constraints (CR-xxx)
-└── interface/        # Interface requirements (IR-xxx)
+├── schemas/          # JSON-схема для валидации требований
+├── business/         # Бизнес-требования (BR-xxx)
+├── stakeholder/      # Требования заинтересованных сторон (SR-xxx)
+├── functional/       # Функциональные требования (FR-xxx)
+├── nonfunctional/    # Нефункциональные требования (NFR-xxx)
+├── constraints/      # Ограничения (CR-xxx)
+└── interface/        # Требования к интерфейсам (IR-xxx)
 ```
 
-Each requirement file includes:
-- Unique ID with type prefix (e.g., `FR-001`)
-- Upward/downward traceability links (`traces_from` / `traces_to`)
-- Links to implementation files and test files
-- Acceptance criteria
-- Status and priority
+Каждый файл требования включает:
+- Уникальный ID с префиксом типа (например, `FR-001`)
+- Ссылки трассировки вверх/вниз (`traces_from` / `traces_to`)
+- Ссылки на файлы реализации и файлы тестов
+- Критерии приёмки
+- Статус и приоритет
 
-See [requirements/README.md](requirements/README.md) for the full requirements guide.
+См. [requirements/README.md](requirements/README.md) для полного руководства по требованиям.
 
-### Validating Requirements
+### Валидация требований
 
 ```bash
 node scripts/validate-requirements.js
 ```
 
-This validates schema conformance, traceability consistency, and file references.
+Проверяет соответствие схеме, согласованность трассировки и ссылки на файлы.
 
-## Source Code Comment Format
+## Формат комментариев в исходном коде
 
-Source files reference requirement IDs using the `@req` tag:
+Исходные файлы ссылаются на ID требований с помощью тега `@req`:
 
 ```cpp
-// @req FR-001 — JSON node storage via pmm AVL-tree forest
+// @req FR-001 — Хранение JSON-узлов через лес AVL-деревьев pmm
 ```
 
-## Dependencies
+## Зависимости
 
-| Dependency | Purpose |
-|------------|---------|
-| [pmm](https://github.com/netkeep80/PersistMemoryManager) | Persistent memory management |
-| C++20 compiler | GCC 12+ / Clang 15+ / MSVC 19.30+ |
-| CMake 3.20+ | Build system |
-| Node.js 20+ | Requirements validation scripts |
+| Зависимость | Назначение |
+|-------------|------------|
+| [pmm](https://github.com/netkeep80/PersistMemoryManager) | Управление персистентной памятью |
+| Компилятор C++20 | GCC 12+ / Clang 15+ / MSVC 19.30+ |
+| CMake 3.20+ | Система сборки |
+| Node.js 20+ | Скрипты валидации требований |
 
-## License
+## Лицензия
 
-[The Unlicense](LICENSE) — public domain.
+[The Unlicense](LICENSE) — общественное достояние.

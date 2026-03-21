@@ -1,145 +1,145 @@
-# pjson Architecture
+# Архитектура pjson
 
-## Overview
+## Обзор
 
-**pjson** (persistent JSON) is a C++20 header-only library that provides a JSON-like API for data structures stored in a persistent address space (PAP) managed by [PersistMemoryManager (pmm)](https://github.com/netkeep80/PersistMemoryManager).
+**pjson** (persistent JSON) — это C++20 header-only библиотека, предоставляющая JSON-подобный API для структур данных, хранящихся в персистентном адресном пространстве (ПАП), управляемом [PersistMemoryManager (pmm)](https://github.com/netkeep80/PersistMemoryManager).
 
-Unlike traditional JSON libraries (e.g., nlohmann::json) that work with in-memory objects requiring explicit serialization/deserialization, pjson operates directly on persistent memory. All JSON data is stored in a binary memory image that can be saved to disk and loaded back without conversion.
+В отличие от традиционных JSON-библиотек (например, nlohmann::json), работающих с объектами в оперативной памяти и требующих явной сериализации/десериализации, pjson работает непосредственно с персистентной памятью. Все JSON-данные хранятся в бинарном образе памяти, который можно сохранить на диск и загрузить обратно без преобразования.
 
-## Architectural Principles
+## Архитектурные принципы
 
-### 1. Unified AVL-Tree Forest Paradigm
+### 1. Единая парадигма леса AVL-деревьев
 
-pjson uses the same AVL-tree forest architecture as pmm for both memory management and stored object management. This means:
+pjson использует ту же архитектуру леса AVL-деревьев, что и pmm, как для управления памятью, так и для управления хранимыми объектами. Это означает:
 
-- **Memory allocation** (free block management) uses AVL trees
-- **JSON objects** (key-value maps) use AVL trees via `pmap`
-- **JSON arrays** use `parray` for O(1) indexed access
-- **String interning** uses AVL trees via `pstringview`
+- **Выделение памяти** (управление свободными блоками) использует AVL-деревья
+- **JSON-объекты** (карты ключ-значение) используют AVL-деревья через `pmap`
+- **JSON-массивы** используют `parray` для доступа по индексу за O(1)
+- **Интернирование строк** использует AVL-деревья через `pstringview`
 
-There is no separate pool allocator or custom memory management in pjson — all memory operations are delegated to pmm.
+В pjson нет отдельного пул-аллокатора или собственного управления памятью — все операции с памятью делегируются pmm.
 
-### 2. pjson as a Thin Wrapper
+### 2. pjson как тонкая обёртка
 
-pjson is a *specific JSON wrapper* around pmm. It adds:
-- JSON value type semantics (null, boolean, integer, real, string, array, object)
-- Path-based addressing (`/a/b/0/c`)
-- JSON parsing and serialization (codec)
-- JSON-specific extensions ($ref, $base64)
+pjson — это *специфическая JSON-обёртка* вокруг pmm. Она добавляет:
+- Семантику типов JSON-значений (null, boolean, integer, real, string, array, object)
+- Адресацию по пути (`/a/b/0/c`)
+- Парсинг и сериализацию JSON (кодек)
+- JSON-специфичные расширения ($ref, $base64)
 
-It does NOT duplicate:
-- Memory management (pmm handles allocation, deallocation, coalescing)
-- Persistent data structures (pmm provides pmap, parray, pstring, pstringview, pptr)
-- Storage backends (pmm provides HeapStorage, MMapStorage, StaticStorage)
-- Thread safety (pmm provides lock policies)
+Она НЕ дублирует:
+- Управление памятью (pmm обрабатывает выделение, освобождение, объединение блоков)
+- Персистентные структуры данных (pmm предоставляет pmap, parray, pstring, pstringview, pptr)
+- Бэкенды хранения (pmm предоставляет HeapStorage, MMapStorage, StaticStorage)
+- Потокобезопасность (pmm предоставляет политики блокировок)
 
-### 3. Offset-Based Addressing
+### 3. Адресация на основе смещений
 
-All inter-object references use granule indices (offsets from the memory region base), not raw pointers. This makes the entire memory image address-independent — it can be:
-- Saved to a file and loaded at a different base address
-- Mapped into shared memory
-- Transferred between processes
+Все межобъектные ссылки используют индексы гранул (смещения от базы области памяти), а не сырые указатели. Это делает весь образ памяти адресно-независимым — его можно:
+- Сохранить в файл и загрузить по другому базовому адресу
+- Отобразить в разделяемую память
+- Передать между процессами
 
-## Architecture Layers
+## Слои архитектуры
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   Application                        │
+│                   Приложение                         │
 ├─────────────────────────────────────────────────────┤
-│  pjson API Layer                                     │
+│  Слой API pjson                                      │
 │  ┌──────────────┬───────────────┬──────────────────┐│
 │  │  pjson_db    │  pjson_codec  │  pjson_helpers   ││
-│  │  (CRUD API)  │  (parse/dump) │  (traversal)     ││
+│  │  (CRUD API)  │ (парсинг/дамп)│  (обход)         ││
 │  └──────┬───────┴───────┬───────┴────────┬─────────┘│
 │         │               │                │           │
-│  pjson Node Layer                                    │
+│  Слой узлов pjson                                    │
 │  ┌──────┴───────────────┴────────────────┴─────────┐│
-│  │  pjson_node (value types, iterators, mutation)  ││
+│  │  pjson_node (типы значений, итераторы, мутация) ││
 │  └──────┬──────────────────────────────────────────┘│
 ├─────────┴───────────────────────────────────────────┤
 │  pmm (PersistMemoryManager)                          │
 │  ┌──────────┬──────────┬───────────┬───────────────┐│
 │  │  pmap    │  parray  │  pstring  │  pstringview  ││
-│  │  (AVL)   │  (contig)│  (mutable)│  (interned)   ││
+│  │  (AVL)   │ (непрер.)│ (изменяем)│ (интерниров.) ││
 │  ├──────────┴──────────┴───────────┴───────────────┤│
-│  │  AVL-tree forest  │  Allocation  │  Block mgmt  ││
+│  │  Лес AVL-деревьев │  Аллокация  │  Упр. блоками││
 │  ├───────────────────┴──────────────┴──────────────┤│
-│  │  Storage Backend (Heap / MMap / Static)          ││
+│  │  Бэкенд хранения (Heap / MMap / Static)         ││
 │  └─────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────┘
 ```
 
-## JSON Node Model
+## Модель JSON-узла
 
-Each JSON value is represented as a node containing:
-- A **tag** identifying the value type (null, boolean, integer, uinteger, real, string, binary, array, object, ref)
-- A **payload** union storing either:
-  - Scalar values directly (boolean, integer, real)
-  - Offsets (granule indices) pointing to persistent containers (string, array, object, binary, ref)
+Каждое JSON-значение представлено как узел, содержащий:
+- **Тег**, идентифицирующий тип значения (null, boolean, integer, uinteger, real, string, binary, array, object, ref)
+- **Payload** (union), хранящий либо:
+  - Скалярные значения напрямую (boolean, integer, real)
+  - Смещения (индексы гранул), указывающие на персистентные контейнеры (string, array, object, binary, ref)
 
-The node structure must be trivially copyable (`POD`) to ensure the entire memory image can be persisted as raw bytes.
+Структура узла должна быть тривиально копируемой (`POD`), чтобы весь образ памяти можно было сохранить как сырые байты.
 
-## Data Structure Mapping
+## Соответствие структур данных
 
-| JSON Type | pmm Container | Access Complexity | Notes                              |
-|-----------|---------------|-------------------|------------------------------------|
-| null      | (tag only)    | O(1)              | No payload                         |
-| boolean   | (inline)      | O(1)              | Stored directly in node payload    |
-| integer   | (inline)      | O(1)              | int64_t in payload                 |
-| real      | (inline)      | O(1)              | double in payload                  |
-| string    | pstring       | O(1) access       | Mutable, dynamically sized         |
-| array     | parray        | O(1) index        | Contiguous, cache-friendly         |
-| object    | pmap          | O(log n) key      | AVL-tree sorted by key             |
-| binary    | parray<byte>  | O(1) index        | Raw byte storage                   |
-| ref       | pstringview   | O(1) compare      | Interned path reference            |
+| Тип JSON  | Контейнер pmm | Сложность доступа | Примечания                               |
+|-----------|---------------|-------------------|------------------------------------------|
+| null      | (только тег)  | O(1)              | Нет payload                              |
+| boolean   | (inline)      | O(1)              | Хранится напрямую в payload узла         |
+| integer   | (inline)      | O(1)              | int64_t в payload                        |
+| real      | (inline)      | O(1)              | double в payload                         |
+| string    | pstring       | O(1) доступ       | Изменяемая, динамического размера        |
+| array     | parray        | O(1) индекс       | Непрерывная, кэш-дружественная           |
+| object    | pmap          | O(log n) ключ     | AVL-дерево, отсортированное по ключу     |
+| binary    | parray<byte>  | O(1) индекс       | Хранение сырых байтов                    |
+| ref       | pstringview   | O(1) сравнение    | Интернированная ссылка по пути           |
 
-## Prototype Analysis
+## Анализ прототипа
 
-### Current State (BinDiffSynchronizer)
+### Текущее состояние (BinDiffSynchronizer)
 
-The prototype in [BinDiffSynchronizer](https://github.com/netkeep80/BinDiffSynchronizer) provides a working pjson implementation with:
-- Full JSON type system (10 node types)
-- Path-based CRUD API
-- JSON codec (parser/serializer) with $ref and $base64 extensions
-- Tree traversal, search, cloning, batch operations
-- Comprehensive test suite (25+ test files)
+Прототип в [BinDiffSynchronizer](https://github.com/netkeep80/BinDiffSynchronizer) предоставляет рабочую реализацию pjson с:
+- Полной системой типов JSON (10 типов узлов)
+- CRUD API на основе путей
+- JSON-кодеком (парсер/сериализатор) с расширениями $ref и $base64
+- Обходом дерева, поиском, клонированием, пакетными операциями
+- Обширным набором тестов (25+ тестовых файлов)
 
-### Identified Issues
+### Выявленные проблемы
 
-1. **Pool allocator duplication** (`pjson_pool_pmm`): Uses `PamManager::ppool<node>` for node allocation instead of direct pmm allocation via AVL-tree forest. This introduces a separate memory management layer that duplicates pmm's functionality.
+1. **Дублирование пул-аллокатора** (`pjson_pool_pmm`): Использует `PamManager::ppool<node>` для выделения узлов вместо прямого выделения через лес AVL-деревьев pmm. Это вводит отдельный слой управления памятью, дублирующий функциональность pmm.
 
-2. **PAM facade duplication** (`pam_pmm.h`): Adds a Persistent Address Manager layer with its own named-object registry (two `pmap` instances) on top of pmm. Some of this functionality overlaps with what pmm provides.
+2. **Дублирование фасада PAM** (`pam_pmm.h`): Добавляет слой Persistent Address Manager с собственным реестром именованных объектов (два экземпляра `pmap`) поверх pmm. Часть этой функциональности пересекается с тем, что предоставляет pmm.
 
-3. **Sorted-array map** (`pmap_pmm.h`): Uses a sorted array (`parray<Entry>`) with binary search instead of pmm's AVL-tree-based `pmap`. This has O(n) insert/delete vs O(log n) for AVL.
+3. **Сортированный массив-карта** (`pmap_pmm.h`): Использует сортированный массив (`parray<Entry>`) с бинарным поиском вместо `pmap` pmm на основе AVL-дерева. Это даёт O(n) для вставки/удаления против O(log n) для AVL.
 
-4. **Global state**: PMM uses static variables (multiton pattern), limiting to one DB per process per config.
+4. **Глобальное состояние**: PMM использует статические переменные (паттерн мультитон), ограничивая одну БД на процесс для каждой конфигурации.
 
-5. **String interning never frees**: The interning dictionary only grows.
+5. **Интернирование строк не освобождает память**: Словарь интернирования только растёт.
 
-### Migration Path
+### Путь миграции
 
-The migration from BinDiffSynchronizer to this repository should:
+Миграция из BinDiffSynchronizer в этот репозиторий должна:
 
-1. Replace `pjson_pool_pmm` with direct pmm allocation
-2. Replace `pmap_pmm` (sorted array) with pmm's native `pmap` (AVL tree)
-3. Simplify or remove the PAM facade where it duplicates pmm
-4. Retain the node model, codec, path-based API, and helper functions
-5. Port the test suite
+1. Заменить `pjson_pool_pmm` на прямое выделение через pmm
+2. Заменить `pmap_pmm` (сортированный массив) на нативную `pmap` pmm (AVL-дерево)
+3. Упростить или убрать фасад PAM, где он дублирует pmm
+4. Сохранить модель узлов, кодек, API на основе путей и вспомогательные функции
+5. Портировать набор тестов
 
-## Source Code Comment Format
+## Формат комментариев в исходном коде
 
-All source files must reference requirement IDs:
+Все исходные файлы должны ссылаться на ID требований:
 
 ```cpp
-// @req FR-001 — JSON node storage via pmm AVL-tree forest
+// @req FR-001 — Хранение JSON-узлов через лес AVL-деревьев pmm
 class pjson_node { ... };
 ```
 
-For multi-requirement references:
+Для ссылок на несколько требований:
 
 ```cpp
 /**
- * @req FR-003 — Path-based JSON value access
- * @req FR-004 — JSON parsing and serialization
+ * @req FR-003 — Доступ к JSON-значениям по пути
+ * @req FR-004 — Парсинг и сериализация JSON
  */
 ```

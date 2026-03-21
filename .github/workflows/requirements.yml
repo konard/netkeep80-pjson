@@ -1,4 +1,4 @@
-name: Requirements Validation
+name: Валидация требований
 
 on:
   push:
@@ -12,15 +12,15 @@ on:
 
 jobs:
   validate:
-    name: Validate Requirements
+    name: Валидация требований
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Настройка Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Validate requirements
+      - name: Валидация требований
         run: node scripts/validate-requirements.js

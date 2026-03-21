@@ -1,9 +1,9 @@
 {
   "id": "BR-001",
   "type": "business",
-  "title": "Persistent JSON library for persistent address space",
-  "description": "pjson must provide a JSON-like API (similar to nlohmann::json) for working with JSON data structures stored in a persistent address space managed by PersistMemoryManager (pmm). All data persists across process restarts without explicit serialization/deserialization.",
-  "rationale": "Applications need a convenient, familiar JSON API that works directly on persistent memory, eliminating the overhead of converting between in-memory and on-disk representations.",
+  "title": "Библиотека персистентного JSON для персистентного адресного пространства",
+  "description": "pjson должна предоставлять JSON-подобный API (аналогичный nlohmann::json) для работы с JSON-структурами данных, хранящимися в персистентном адресном пространстве, управляемом PersistMemoryManager (pmm). Все данные сохраняются между перезапусками процесса без явной сериализации/десериализации.",
+  "rationale": "Приложениям необходим удобный, знакомый JSON API, работающий непосредственно с персистентной памятью, исключающий накладные расходы на преобразование между представлениями в оперативной памяти и на диске.",
   "status": "approved",
   "priority": "critical",
   "version": "1.0",
@@ -14,9 +14,9 @@
   "implementation_files": [],
   "test_files": [],
   "acceptance_criteria": [
-    "Library provides API for creating, reading, updating, and deleting JSON values in persistent memory",
-    "Data survives process restarts without explicit save/load serialization",
-    "API is ergonomic and similar to nlohmann::json where applicable"
+    "Библиотека предоставляет API для создания, чтения, обновления и удаления JSON-значений в персистентной памяти",
+    "Данные сохраняются между перезапусками процесса без явной сериализации/загрузки",
+    "API эргономичен и аналогичен nlohmann::json, где это применимо"
   ],
   "tags": ["core", "architecture"]
 }

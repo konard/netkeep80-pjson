@@ -1,9 +1,9 @@
 {
   "id": "CR-001",
   "type": "constraint",
-  "title": "Dependency on PersistMemoryManager (pmm)",
-  "description": "pjson depends on pmm as its sole external dependency for memory management, persistent pointers, and persistent data structures. The pmm version must be compatible with pjson's requirements.",
-  "rationale": "pmm provides the foundational persistent address space management. All pjson data structures are built on top of pmm primitives.",
+  "title": "Зависимость от PersistMemoryManager (pmm)",
+  "description": "pjson зависит от pmm как единственной внешней зависимости для управления памятью, персистентных указателей и персистентных структур данных. Версия pmm должна быть совместима с требованиями pjson.",
+  "rationale": "pmm обеспечивает базовое управление персистентным адресным пространством. Все структуры данных pjson построены на примитивах pmm.",
   "status": "approved",
   "priority": "critical",
   "version": "1.0",
@@ -14,9 +14,9 @@
   "implementation_files": [],
   "test_files": [],
   "acceptance_criteria": [
-    "pjson compiles with the latest pmm release",
-    "No other external dependencies besides pmm and the C++ standard library",
-    "pmm version requirement is documented"
+    "pjson компилируется с последним релизом pmm",
+    "Нет других внешних зависимостей, кроме pmm и стандартной библиотеки C++",
+    "Требование к версии pmm задокументировано"
   ],
   "tags": ["dependency", "pmm"]
 }

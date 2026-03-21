@@ -1,9 +1,9 @@
 {
   "id": "FR-001",
   "type": "functional",
-  "title": "JSON node storage via pmm AVL-tree forest",
-  "description": "JSON nodes must be allocated, stored, and managed exclusively through pmm's AVL-tree forest mechanism. Each JSON value (null, boolean, integer, real, string, array, object) is represented as a pmm-managed block. Arrays use parray for O(1) index access. Objects use pmap for O(log n) key lookup. Strings use pstringview (interned, read-only) for keys and pstring (mutable) for values.",
-  "rationale": "This eliminates the separate pool allocator used in the BinDiffSynchronizer prototype and aligns with BR-002's unified architecture requirement.",
+  "title": "Хранение JSON-узлов через лес AVL-деревьев pmm",
+  "description": "JSON-узлы должны выделяться, храниться и управляться исключительно через механизм леса AVL-деревьев pmm. Каждое JSON-значение (null, boolean, integer, real, string, array, object) представляется как блок, управляемый pmm. Массивы используют parray для доступа по индексу за O(1). Объекты используют pmap для поиска по ключу за O(log n). Строки используют pstringview (интернированные, только для чтения) для ключей и pstring (изменяемые) для значений.",
+  "rationale": "Это устраняет отдельный пул-аллокатор, используемый в прототипе BinDiffSynchronizer, и соответствует требованию единой архитектуры BR-002.",
   "status": "proposed",
   "priority": "critical",
   "version": "1.0",
@@ -14,11 +14,11 @@
   "implementation_files": [],
   "test_files": [],
   "acceptance_criteria": [
-    "JSON nodes use pmm allocation (no ppool or custom pool)",
-    "Arrays backed by parray with O(1) index access",
-    "Objects backed by pmap with O(log n) key lookup",
-    "String keys use pstringview for interning and deduplication",
-    "String values use pstring for mutability"
+    "JSON-узлы используют выделение через pmm (без ppool или пользовательского пула)",
+    "Массивы построены на parray с доступом по индексу за O(1)",
+    "Объекты построены на pmap с поиском по ключу за O(log n)",
+    "Строковые ключи используют pstringview для интернирования и дедупликации",
+    "Строковые значения используют pstring для изменяемости"
   ],
   "tags": ["core", "pmm", "avl-tree", "node"]
 }

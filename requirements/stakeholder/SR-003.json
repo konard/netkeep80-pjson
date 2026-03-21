@@ -1,9 +1,9 @@
 {
   "id": "SR-003",
   "type": "stakeholder",
-  "title": "Requirements-driven development process",
-  "description": "The project must follow a requirements-driven development methodology. Requirements are stored as JSON files following a defined JSON Schema, organized by type (business, stakeholder, functional, non-functional, constraint, interface). Traceability must be maintained between requirements, implementation files, and test files.",
-  "rationale": "Requirements-driven development (per Karl Wiegers) ensures that all implemented features are justified by traceable requirements, and that all requirements are verified by tests.",
+  "title": "Процесс разработки на основе требований",
+  "description": "Проект должен следовать методологии разработки на основе требований. Требования хранятся в виде JSON-файлов, соответствующих определённой JSON-схеме, организованных по типам (бизнес, заинтересованные стороны, функциональные, нефункциональные, ограничения, интерфейсные). Должна поддерживаться трассировка между требованиями, файлами реализации и файлами тестов.",
+  "rationale": "Разработка на основе требований (по Карлу Вигерсу) гарантирует, что все реализованные функции обоснованы отслеживаемыми требованиями, и что все требования проверены тестами.",
   "status": "approved",
   "priority": "high",
   "version": "1.0",
@@ -14,10 +14,10 @@
   "implementation_files": ["requirements/schemas/requirement.schema.json"],
   "test_files": [],
   "acceptance_criteria": [
-    "All requirements are stored in JSON files conforming to the requirement schema",
-    "Each requirement has upward and downward traceability links",
-    "CI pipeline validates requirement files against the JSON schema",
-    "Source code comments reference requirement IDs"
+    "Все требования хранятся в JSON-файлах, соответствующих схеме требований",
+    "Каждое требование имеет ссылки трассировки вверх и вниз",
+    "CI-пайплайн валидирует файлы требований по JSON-схеме",
+    "Комментарии в исходном коде ссылаются на ID требований"
   ],
   "tags": ["process", "requirements", "traceability"]
 }

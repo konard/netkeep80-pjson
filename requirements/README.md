@@ -1,70 +1,70 @@
-# Requirements
+# Требования
 
-This directory contains project requirements organized by type, following Karl Wiegers' requirements engineering methodology.
+Этот каталог содержит требования проекта, организованные по типам, в соответствии с методологией инженерии требований Карла Вигерса.
 
-## Directory Structure
+## Структура каталога
 
 ```
 requirements/
-├── schemas/                  # JSON Schema definitions
+├── schemas/                  # Определения JSON-схемы
 │   └── requirement.schema.json
-├── business/                 # Business requirements (BR-xxx)
-├── stakeholder/              # Stakeholder requirements (SR-xxx)
-├── functional/               # Functional requirements (FR-xxx)
-├── nonfunctional/            # Non-functional requirements (NFR-xxx)
-├── constraints/              # Constraints (CR-xxx)
-└── interface/                # Interface requirements (IR-xxx)
+├── business/                 # Бизнес-требования (BR-xxx)
+├── stakeholder/              # Требования заинтересованных сторон (SR-xxx)
+├── functional/               # Функциональные требования (FR-xxx)
+├── nonfunctional/            # Нефункциональные требования (NFR-xxx)
+├── constraints/              # Ограничения (CR-xxx)
+└── interface/                # Требования к интерфейсам (IR-xxx)
 ```
 
-## Requirement ID Format
+## Формат ID требований
 
-Each requirement has a unique ID with a prefix indicating its type:
+Каждое требование имеет уникальный ID с префиксом, указывающим его тип:
 
-| Prefix | Type           | Description                                      |
-|--------|----------------|--------------------------------------------------|
-| BR     | Business       | High-level business goals and objectives          |
-| SR     | Stakeholder    | Needs and expectations of stakeholders            |
-| FR     | Functional     | Specific system behaviors and capabilities        |
-| NFR    | Non-functional | Quality attributes (performance, security, etc.)  |
-| CR     | Constraint     | Technical or organizational limitations           |
-| IR     | Interface      | External system interaction requirements          |
+| Префикс | Тип               | Описание                                           |
+|---------|-------------------|------------------------------------------------------|
+| BR      | Бизнес            | Высокоуровневые бизнес-цели и задачи                 |
+| SR      | Заинтересованные стороны | Потребности и ожидания заинтересованных сторон   |
+| FR      | Функциональные    | Конкретное поведение и возможности системы            |
+| NFR     | Нефункциональные  | Атрибуты качества (производительность, безопасность)  |
+| CR      | Ограничения       | Технические или организационные ограничения           |
+| IR      | Интерфейсные      | Требования к взаимодействию с внешними системами      |
 
-## Traceability
+## Трассировка
 
-Requirements maintain bidirectional traceability:
+Требования поддерживают двунаправленную трассировку:
 
-- **`traces_from`**: Links to higher-level requirements this one is derived from (upward traceability)
-- **`traces_to`**: Links to lower-level requirements derived from this one (downward traceability)
-- **`implementation_files`**: Links to source files implementing the requirement
-- **`test_files`**: Links to test files verifying the requirement
+- **`traces_from`**: Ссылки на требования более высокого уровня, из которых получено данное требование (трассировка вверх)
+- **`traces_to`**: Ссылки на требования более низкого уровня, полученные из данного требования (трассировка вниз)
+- **`implementation_files`**: Ссылки на файлы исходного кода, реализующие требование
+- **`test_files`**: Ссылки на файлы тестов, проверяющие требование
 
-## Source Code Comment Format
+## Формат комментариев в исходном коде
 
-Source files implementing requirements must include a reference in the following format:
+Исходные файлы, реализующие требования, должны содержать ссылку в следующем формате:
 
 ```cpp
-// @req FR-001, FR-002 — Brief description of what this code implements
+// @req FR-001, FR-002 — Краткое описание того, что реализует этот код
 ```
 
-For block-level documentation:
+Для документации на уровне блоков:
 
 ```cpp
 /**
- * @req FR-003 — Path-based JSON value access
- * @req FR-004 — JSON parsing and serialization
+ * @req FR-003 — Доступ к JSON-значениям по пути
+ * @req FR-004 — Парсинг и сериализация JSON
  */
 ```
 
-## Validation
+## Валидация
 
-Requirements are validated automatically in CI:
+Требования валидируются автоматически в CI:
 
 ```bash
 node scripts/validate-requirements.js
 ```
 
-This validates:
-1. All JSON files conform to the requirement schema
-2. All traceability links reference existing requirements
-3. Bidirectional traceability consistency
-4. Implementation and test file existence (warnings only)
+Проверяется:
+1. Все JSON-файлы соответствуют схеме требований
+2. Все ссылки трассировки указывают на существующие требования
+3. Согласованность двунаправленной трассировки
+4. Существование файлов реализации и тестов (только предупреждения)

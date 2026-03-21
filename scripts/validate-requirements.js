@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * @req FR-005, FR-006 — Requirements validation script
+ * @req FR-005, FR-006 — Скрипт валидации требований
  *
- * Validates all requirement JSON files against the schema and checks
- * traceability consistency.
+ * Валидирует все JSON-файлы требований по схеме и проверяет
+ * согласованность трассировки.
  *
- * Usage: node scripts/validate-requirements.js
- * Exit code: 0 if all validations pass, 1 if any fail.
+ * Использование: node scripts/validate-requirements.js
+ * Код возврата: 0 если все проверки пройдены, 1 если есть ошибки.
  */
 
 const fs = require('fs');
@@ -31,29 +31,29 @@ let errors = 0;
 let warnings = 0;
 
 function error(msg) {
-  console.error(`ERROR: ${msg}`);
+  console.error(`ОШИБКА: ${msg}`);
   errors++;
 }
 
 function warn(msg) {
-  console.warn(`WARNING: ${msg}`);
+  console.warn(`ПРЕДУПРЕЖДЕНИЕ: ${msg}`);
   warnings++;
 }
 
 function info(msg) {
-  console.log(`INFO: ${msg}`);
+  console.log(`ИНФО: ${msg}`);
 }
 
-// Load schema
+// Загрузка схемы
 let schema;
 try {
   schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, 'utf8'));
 } catch (e) {
-  error(`Cannot load schema: ${e.message}`);
+  error(`Не удалось загрузить схему: ${e.message}`);
   process.exit(1);
 }
 
-// Collect all requirement files
+// Сбор всех файлов требований
 const allRequirements = new Map();
 const allFiles = [];
 
@@ -68,44 +68,44 @@ for (const subdir of SUBDIRS) {
   }
 }
 
-info(`Found ${allFiles.length} requirement file(s)`);
+info(`Найдено ${allFiles.length} файл(ов) требований`);
 
-// Phase 1: Schema validation (basic, without external validator)
+// Фаза 1: Валидация по схеме (базовая, без внешнего валидатора)
 for (const { filePath, subdir, file } of allFiles) {
   let req;
   try {
     req = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   } catch (e) {
-    error(`${file}: Invalid JSON - ${e.message}`);
+    error(`${file}: Невалидный JSON - ${e.message}`);
     continue;
   }
 
-  // Check required fields
+  // Проверка обязательных полей
   const requiredFields = schema.required || [];
   for (const field of requiredFields) {
     if (!(field in req)) {
-      error(`${file}: Missing required field '${field}'`);
+      error(`${file}: Отсутствует обязательное поле '${field}'`);
     }
   }
 
-  // Validate ID format
+  // Валидация формата ID
   if (req.id) {
     const idPattern = /^(BR|SR|FR|NFR|CR|IR)-[0-9]{3}$/;
     if (!idPattern.test(req.id)) {
-      error(`${file}: Invalid ID format '${req.id}' (expected pattern: XX-NNN)`);
+      error(`${file}: Невалидный формат ID '${req.id}' (ожидается паттерн: XX-NNN)`);
     }
 
-    // Check ID prefix matches type
+    // Проверка соответствия префикса ID типу
     if (req.type) {
       const expectedPrefix = TYPE_PREFIX_MAP[req.type];
       if (expectedPrefix && !req.id.startsWith(expectedPrefix + '-')) {
-        error(`${file}: ID '${req.id}' does not match type '${req.type}' (expected prefix '${expectedPrefix}-')`);
+        error(`${file}: ID '${req.id}' не соответствует типу '${req.type}' (ожидается префикс '${expectedPrefix}-')`);
       }
     }
 
-    // Check for duplicate IDs
+    // Проверка на дубликаты ID
     if (allRequirements.has(req.id)) {
-      error(`${file}: Duplicate ID '${req.id}' (also in ${allRequirements.get(req.id)._file})`);
+      error(`${file}: Дублирующийся ID '${req.id}' (также в ${allRequirements.get(req.id)._file})`);
     } else {
       req._file = file;
       req._filePath = filePath;
@@ -113,65 +113,65 @@ for (const { filePath, subdir, file } of allFiles) {
     }
   }
 
-  // Validate type enum
+  // Валидация перечисления type
   if (req.type) {
     const validTypes = schema.properties.type.enum;
     if (!validTypes.includes(req.type)) {
-      error(`${file}: Invalid type '${req.type}' (valid: ${validTypes.join(', ')})`);
+      error(`${file}: Невалидный тип '${req.type}' (допустимые: ${validTypes.join(', ')})`);
     }
   }
 
-  // Validate status enum
+  // Валидация перечисления status
   if (req.status) {
     const validStatuses = schema.properties.status.enum;
     if (!validStatuses.includes(req.status)) {
-      error(`${file}: Invalid status '${req.status}' (valid: ${validStatuses.join(', ')})`);
+      error(`${file}: Невалидный статус '${req.status}' (допустимые: ${validStatuses.join(', ')})`);
     }
   }
 
-  // Validate priority enum
+  // Валидация перечисления priority
   if (req.priority) {
     const validPriorities = schema.properties.priority.enum;
     if (!validPriorities.includes(req.priority)) {
-      error(`${file}: Invalid priority '${req.priority}' (valid: ${validPriorities.join(', ')})`);
+      error(`${file}: Невалидный приоритет '${req.priority}' (допустимые: ${validPriorities.join(', ')})`);
     }
   }
 
-  // Check for unknown properties
+  // Проверка на неизвестные свойства
   const knownProperties = new Set(Object.keys(schema.properties));
   for (const key of Object.keys(req)) {
-    if (key.startsWith('_')) continue; // internal fields
+    if (key.startsWith('_')) continue; // внутренние поля
     if (!knownProperties.has(key)) {
-      error(`${file}: Unknown property '${key}'`);
+      error(`${file}: Неизвестное свойство '${key}'`);
     }
   }
 }
 
-// Phase 2: Traceability validation
-info('Validating traceability links...');
+// Фаза 2: Валидация трассировки
+info('Проверка ссылок трассировки...');
 
 for (const [id, req] of allRequirements) {
-  // Check traces_from references exist
+  // Проверка существования ссылок traces_from
   if (Array.isArray(req.traces_from)) {
     for (const refId of req.traces_from) {
       if (!allRequirements.has(refId)) {
-        error(`${req._file}: traces_from references non-existent requirement '${refId}'`);
+        error(`${req._file}: traces_from ссылается на несуществующее требование '${refId}'`);
       }
     }
   }
 
-  // Check traces_to references exist
+  // Проверка существования ссылок traces_to
   if (Array.isArray(req.traces_to)) {
     for (const refId of req.traces_to) {
       if (!allRequirements.has(refId)) {
-        error(`${req._file}: traces_to references non-existent requirement '${refId}'`);
+        error(`${req._file}: traces_to ссылается на несуществующее требование '${refId}'`);
       }
     }
   }
 }
 
-// Phase 3: Bidirectional traceability consistency
-info('Checking bidirectional traceability consistency...');
+// Фаза 3: Согласованность двунаправленной трассировки
+info('Проверка согласованности двунаправленной трассировки...');
 
 for (const [id, req] of allRequirements) {
   if (Array.isArray(req.traces_to)) {
@@ -179,7 +179,7 @@ for (const [id, req] of allRequirements) {
       const target = allRequirements.get(refId);
       if (target && Array.isArray(target.traces_from)) {
         if (!target.traces_from.includes(id)) {
-          warn(`${req._file}: '${id}' traces_to '${refId}', but '${refId}' does not traces_from '${id}'`);
+          warn(`${req._file}: '${id}' traces_to '${refId}', но '${refId}' не содержит traces_from '${id}'`);
         }
       }
     }
@@ -190,15 +190,15 @@ for (const [id, req] of allRequirements) {
       const source = allRequirements.get(refId);
       if (source && Array.isArray(source.traces_to)) {
         if (!source.traces_to.includes(id)) {
-          warn(`${req._file}: '${id}' traces_from '${refId}', but '${refId}' does not traces_to '${id}'`);
+          warn(`${req._file}: '${id}' traces_from '${refId}', но '${refId}' не содержит traces_to '${id}'`);
         }
       }
     }
   }
 }
 
-// Phase 4: File existence checks (warnings only)
-info('Checking implementation and test file references...');
+// Фаза 4: Проверка существования файлов (только предупреждения)
+info('Проверка ссылок на файлы реализации и тестов...');
 
 const projectRoot = path.join(__dirname, '..');
 
@@ -207,7 +207,7 @@ for (const [id, req] of allRequirements) {
     for (const file of req.implementation_files) {
       const absPath = path.join(projectRoot, file);
       if (!fs.existsSync(absPath)) {
-        warn(`${req._file}: Implementation file '${file}' does not exist`);
+        warn(`${req._file}: Файл реализации '${file}' не существует`);
       }
     }
   }
@@ -216,23 +216,23 @@ for (const [id, req] of allRequirements) {
     for (const file of req.test_files) {
       const absPath = path.join(projectRoot, file);
       if (!fs.existsSync(absPath)) {
-        warn(`${req._file}: Test file '${file}' does not exist`);
+        warn(`${req._file}: Файл тестов '${file}' не существует`);
       }
     }
   }
 }
 
-// Summary
+// Итоги
 console.log('');
-console.log('=== Validation Summary ===');
-console.log(`Requirements: ${allRequirements.size}`);
-console.log(`Errors: ${errors}`);
-console.log(`Warnings: ${warnings}`);
+console.log('=== Итоги валидации ===');
+console.log(`Требований: ${allRequirements.size}`);
+console.log(`Ошибок: ${errors}`);
+console.log(`Предупреждений: ${warnings}`);
 
 if (errors > 0) {
-  console.log('\nValidation FAILED');
+  console.log('\nВалидация НЕ ПРОЙДЕНА');
   process.exit(1);
 } else {
-  console.log('\nValidation PASSED');
+  console.log('\nВалидация ПРОЙДЕНА');
   process.exit(0);
 }
