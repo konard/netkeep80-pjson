@@ -34,6 +34,29 @@ pmm должна поддерживать создание выделенных 
 
 pmm должна предоставлять итераторы для обхода типизированных AVL-деревьев, позволяющие перебрать все узлы определённого типа за O(n).
 
+### Унификация node_type и типа JSON-узла [FR-014](../requirements/functional/FR-014.json)
+
+pmm должна поддерживать использование поля `node_type` в `TreeNode` как единственного идентификатора типа JSON-узла. Это означает:
+
+1. **Расширенный диапазон node_type**: Поле `node_type` должно поддерживать не менее 10 различных значений для всех типов JSON-узлов (null, boolean, integer, uinteger, real, string, object, array, binary, ref) плюс внутренние типы pmm.
+
+2. **Доступ к node_type через pptr**: pmm должна предоставлять эффективный способ определения `node_type` по `pptr` за O(1) — через обращение к `TreeNode`, к которому относится данный блок.
+
+3. **Динамическая типизация pptr**: `pptr` используется как динамический тип, где тип данных определяется в runtime через `node_type` соответствующего `TreeNode`, а не через шаблонный параметр compile-time.
+
+| node_type | Тип узла pjson   | Payload              |
+|-----------|------------------|----------------------|
+| 1         | null             | (нет payload)        |
+| 2         | boolean          | uint32_t             |
+| 3         | integer          | int64_t              |
+| 4         | uinteger         | uint64_t             |
+| 5         | real             | double               |
+| 6         | string           | pstring              |
+| 7         | object           | pmap\<pstringview,V\>|
+| 8         | array            | parray\<pptr\>       |
+| 9         | binary           | parray\<uint8_t\>    |
+| 10        | ref              | pstringview          |
+
 ## Персистентные контейнеры [SR-002](../requirements/stakeholder/SR-002.json)
 
 pmm должна предоставлять набор персистентных контейнеров, которые pjson использует как тонкая обёртка.
